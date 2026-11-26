@@ -128,7 +128,7 @@ using (var scope = app.Services.CreateScope())
 
     var adminEmail = "admin@smartmeetings.local";
     var admin = await userMgr.FindByEmailAsync(adminEmail);
-    if (admin == null)
+    if (admin == null && !string.IsNullOrWhiteSpace(config["Seed:AdminPassword"]))
     {
         admin = new AppUser
         {
@@ -137,7 +137,7 @@ using (var scope = app.Services.CreateScope())
             EmailConfirmed = true,
             FullName = "System Admin"
         };
-        await userMgr.CreateAsync(admin, "Admin#12345");
+        await userMgr.CreateAsync(admin, config["Seed:AdminPassword"]!);
         await userMgr.AddToRoleAsync(admin, "Admin");
     }
 }
